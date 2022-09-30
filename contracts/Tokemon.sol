@@ -30,7 +30,7 @@ contract Tokemon is ERC721Enumerable, Ownable {
   uint256 public nftPerAddressLimit = 1;
   bool public paused = false;
   bool public revealed = false;
-  bool public onlyWhitelisted = true;
+  bool public onlyWhitelisted = false;
   address[] public whitelistedAddresses;
   mapping(address => uint256) public addressMintedBalance;
 

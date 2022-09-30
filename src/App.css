@@ -56,3 +56,8 @@ button {
   border: 0;
   cursor: pointer;
 }
+
+.img-nft {
+  width: 150px;
+  height: 150px;
+}
