@@ -1,13 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import Tokemon from './artifacts/contracts/Tokemon.sol/Tokemon.json'
+import Tokemon from './artifacts/contracts/TokemonERC721A.sol/TokemonERC721A.json'
 import './App.css';
 import img1 from './img/1.png';
 import img2 from './img/3.png';
 import img3 from './img/6.png';
 
-const TokemonAddress = "0x1f842322Ff1d91D89BDf919Ed6b834C43Fd8ECA6";
+const TokemonNFT = "0x1f842322Ff1d91D89BDf919Ed6b834C43Fd8ECA6";
 
 function App() {
 
@@ -48,7 +48,7 @@ function App() {
   async function fetchData() {
     if(typeof window.ethereum !== 'undefined') {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(TokemonAddress, Tokemon.abi, provider);
+      const contract = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, provider);
 
       try {
         const cost = await contract.cost();
@@ -68,7 +68,7 @@ function App() {
     if(typeof window.ethereum !== 'undefined') {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const contract = new ethers.Contract(TokemonAddress, Tokemon.abi, signer);
+      const contract = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, signer);
 
       setError('');
       try {
@@ -86,7 +86,7 @@ function App() {
     if(typeof window.ethereum !== 'undefined') {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const contract = new ethers.Contract(TokemonAddress, Tokemon.abi, signer);
+      const contract = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, signer);
 
       setError('');
       try {

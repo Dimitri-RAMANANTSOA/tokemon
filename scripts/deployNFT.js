@@ -7,18 +7,18 @@
 const hre = require("hardhat");
 
 async function main() {
-  const Tokemon = await hre.ethers.getContractFactory("Tokemon");
-  const tokemon = await Tokemon.deploy(
+  const NFT = await hre.ethers.getContractFactory("TokemonERC721A");
+  const nft = await NFT.deploy(
   "Tokemon",
   "TKM",
   "ipfs://bafybeigmth5rfq6l4s63nvf2mxrp57c43yuc4g5esihw66rwuu7dbjzvpa/",
   "ipfs://bafybeigmth5rfq6l4s63nvf2mxrp57c43yuc4g5esihw66rwuu7dbjzvpa/"
   );
 
-  await tokemon.deployed();
+  await nft.deployed();
 
   console.log(
-    `Tokemon deployed to ${tokemon.address}`
+    `Tokemon NFT deployed to ${nft.address}`
   );
 }
 
