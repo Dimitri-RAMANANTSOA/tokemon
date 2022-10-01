@@ -121,31 +121,45 @@ function StakingNFT() {
 
   return (
     <div className="App">
-        <p>rewards = {String(reward)}</p>
+      <>
+      <div className='header'>
+        <h1>Hello Tokemon</h1>
         {error && <p>{error}</p>}
         {!loader &&
         accounts.length > 0 ?
-        <>
-        <p className="connected">You are connected with account : {accounts[0]}</p>
-        </>
+        <p className="connected">{accounts[0].slice(1, 10)}</p>
         :
         <p className="notconnected">You are not connected</p>
         }
+        </div>
 
-        <div className='User-NFT'>
+        <div className='info-container'>
+          <div className='info-card1'>
+            <p>rewards = {String(reward)}</p>
+          </div>
+
+          <div className='info-card2'>
+            <p>rewards = {String(reward)}</p>
+          </div>
+        </div>
+
+        <div className='card-container'>
+        <div className='user-NFT'>
         {
           NFTuri.map((img) => {
            return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" />
           })
         }
         </div>
-        <div className='Contract-NFT'>
+        <div className='contract-NFT'>
         {
           StakedNFT.map((img) => {
            return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" />
           })
         }
         </div>
+        </div>
+      </>
       </div>
   );
 }

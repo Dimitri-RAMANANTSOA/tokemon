@@ -1,13 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@100;300;400;700&display=swap');
 
-.App {
-  text-align: center;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 html {
   font-size: 16px;
 }
@@ -60,4 +52,54 @@ button {
 .img-nft {
   width: 150px;
   height: 150px;
+}
+
+.user-NFT, .contract-NFT {
+  width: 400px;
+  height: 400px;
+  background: lightgray;
+}
+
+.contract-NFT {
+  background: lightblue;
+  margin-left: 50px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+}
+
+.connected {
+  height: 30px;
+  width: 100px;
+  background: orange;
+  border-radius: 5px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.info-container {
+  display: flex;
+  justify-content: center;
+}
+
+.info-card1, .info-card2 {
+  width: 400px;
+  height: 50px;
+  background: lightcoral;
+  margin-bottom: 20px;
+  margin-top: 5%;
+}
+
+.info-card2 {
+  margin-left: 50px;
 }
