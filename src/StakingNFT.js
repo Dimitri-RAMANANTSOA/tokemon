@@ -135,11 +135,11 @@ function StakingNFT() {
 
         <div className='info-container'>
           <div className='info-card1'>
-            <p>rewards = {String(reward)}</p>
+            <p className='inside-info'>rewards = {String(reward)}</p>
           </div>
 
           <div className='info-card2'>
-            <p>rewards = {String(reward)}</p>
+            <p className='inside-info'>rewards = {String(reward)}</p>
           </div>
         </div>
 
@@ -158,6 +158,20 @@ function StakingNFT() {
           })
         }
         </div>
+        </div>
+
+        <div className='button-container'>
+          <div className='range-one'>
+            <button>Test</button>
+            <button>Test</button>
+            <button>Test</button>
+          </div>
+
+          <div className='range-two'>
+            <button>Test</button>
+            <button>Test</button>
+            <button>Test</button>
+          </div>
         </div>
       </>
       </div>
