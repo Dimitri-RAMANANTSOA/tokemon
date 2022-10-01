@@ -117,7 +117,7 @@ function MintNFT() {
         accounts.length > 0 ?
         <>
         <p className="connected">You are connected with account : {accounts[0]}</p>
-        <button className="mint"onClick={mint}>Buy a Tokemon</button>
+        <button className="mint" onClick={mint}>Buy a Tokemon</button>
         </>
         :
         <p className="notconnected">You are not connected</p>

@@ -26,7 +26,11 @@ function StakingNFT() {
     showRewards();
     setLoader(false);
   }, [])
-
+  
+  //Staked
+  //Unstaked
+  //Claimed
+  
   window.ethereum.addListener('connect', async(response) => {
     requestAccount();
   })
@@ -48,6 +52,11 @@ function StakingNFT() {
       let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
       setAccounts(accounts);
     }
+  }
+  function getData() {
+    getNFTbalance();
+    getStakingNFTbalance();
+    showRewards();
   }
 
   async function getNFTbalance() {
@@ -116,23 +125,88 @@ function StakingNFT() {
       }
       
     }
+  }
+  /**
+   * 
+   * @param {*} NFTIds List of NFT to stake
+   * @param {*} Stake boolean to indicate if we need Stake (true) or Unstake (false)
+   * @param {*} All boolean to indicate if we want stake/unstake all NFTs(true) or just the user selection
+   */
+  async function StakeNFT(NFTIds, Stake, All) {
 
+    if(typeof window.ethereum !== 'undefined') {
+      let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contractStaking = new ethers.Contract(TokemonStake, TokemonStaking.abi, signer);
+      const contractNFT = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, provider);
+
+      if (All) {
+        setError('');
+        try {
+          if(Stake) {
+            await contractNFT.tokensOfOwner(accounts[0])
+            .then((response) => {
+              NFTIds = response;
+            });
+          }
+          else {
+            await contractStaking.tokenStakedByOwner(accounts[0])
+            .then((response) => {
+              NFTIds = response;
+            });
+          }
+          
+        }
+        catch(err) {
+          setError(err.message);
+        }
+
+      }
+
+      setError('');
+      try {
+        let transaction;
+        if(Stake) {
+          console.log('Stake', String(NFTIds));
+          transaction = await contractStaking.Stake(NFTIds)
+        } 
+        else {
+          console.log('Unstake', String(NFTIds));
+          transaction = await contractStaking.unstake(NFTIds)
+        } 
+        
+        await transaction.wait();
+        getData();
+        
+      }
+      catch(err) {
+        setError(err.message);
+      }
+    }
   }
 
   return (
     <div className="App">
-        <p>rewards = {String(reward)}</p>
-        {error && <p>{error}</p>}
-        {!loader &&
-        accounts.length > 0 ?
-        <>
-        <p className="connected">You are connected with account : {accounts[0]}</p>
-        </>
-        :
-        <p className="notconnected">You are not connected</p>
-        }
+        <div>
+          <p>rewards = {String(reward)}</p>
+          {error && <p>{error}</p>}
+          {!loader &&
+          accounts.length > 0 ?
+          <>
+          {/* <p className="connected">You are connected with account : {accounts[0]}</p>*/}
+          <button className="stake" onClick={() => StakeNFT([2],true,true)}>Stake All</button>
+          <button className="unstake" onClick={() => StakeNFT([2],false,true)}>Unstake All</button>
 
+          <button className="stake" onClick={() => StakeNFT([0],true,false)}>Stake Croco</button>
+          <button className="unstake" onClick={() => StakeNFT([0],false,false)}>Unstake Croco</button>
+          </>
+          :
+          <p className="notconnected">You are not connected</p>
+          }
+        </div>
         <div className='User-NFT'>
+        <p>NFT du User</p>
         {
           NFTuri.map((img) => {
            return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" />
@@ -140,13 +214,14 @@ function StakingNFT() {
         }
         </div>
         <div className='Contract-NFT'>
+        <p>NFT du contrat</p>
         {
           StakedNFT.map((img) => {
            return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" />
           })
         }
         </div>
-      </div>
+    </div>
   );
 }
 
