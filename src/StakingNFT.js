@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import TokemonERC721A from './artifacts/contracts/TokemonERC721A.sol/TokemonERC721A.json'
 import TokemonStaking from './artifacts/contracts/TokemonStaking.sol/TokemonStaking.json'
+import TokemonERC20 from './artifacts/contracts/TokemonIsERC20.sol/TokemonIsERC20.json'
 import './App.css';
 
 const TokemonNFT = "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e";
@@ -18,18 +19,13 @@ function StakingNFT() {
   const [loader, setLoader] = useState(true);
   const [StakedNFT, setStakedNFT] = useState([]);
   const [NFTuri, setNFTuri] = useState([]);
+  const [balance, setBalance] = useState([]);
 
   useEffect(() => {
     requestAccount();
-    getNFTbalance();
-    getStakingNFTbalance();
-    showRewards();
+    getData()
     setLoader(false);
   }, [])
-  
-  //Staked
-  //Unstaked
-  //Claimed
   
   window.ethereum.addListener('connect', async(response) => {
     requestAccount();
@@ -57,6 +53,7 @@ function StakingNFT() {
     getNFTbalance();
     getStakingNFTbalance();
     showRewards();
+    getBalance();
   }
 
   async function getNFTbalance() {
@@ -125,7 +122,60 @@ function StakingNFT() {
       }
       
     }
+
   }
+
+  async function getBalance() {
+
+    if(typeof window.ethereum !== 'undefined') {
+      let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(TokemonToken, TokemonERC20.abi, provider);
+      setError('');
+
+      try {
+        setBalance(await contract.balanceOf(accounts[0]))
+      }
+      catch(err) {
+        setError(err.message);
+      }
+      
+    }
+  }
+
+  async function Claim() {
+
+    if(typeof window.ethereum !== 'undefined') {
+      let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contractStaking = new ethers.Contract(TokemonStake, TokemonStaking.abi, signer);
+      const callStaking = new ethers.Contract(TokemonStake, TokemonStaking.abi, provider);
+
+
+      setError('');
+
+      try {
+        await callStaking.tokenStakedByOwner(accounts[0])
+        .then((response) => {
+          contractStaking.claim(response)
+          .then((rep) => {
+            rep.wait()
+            .then(() => {
+              getData(); 
+            });  
+          });    
+        });
+        
+        
+      }
+      catch(err) {
+        setError(err.message);
+      }
+      
+    }
+  }
+
   /**
    * 
    * @param {*} NFTIds List of NFT to stake
@@ -190,6 +240,7 @@ function StakingNFT() {
     <div className="App">
         <div>
           <p>rewards = {String(reward)}</p>
+          <p>wallet = {String(balance)}</p>
           {error && <p>{error}</p>}
           {!loader &&
           accounts.length > 0 ?
@@ -200,6 +251,7 @@ function StakingNFT() {
 
           <button className="stake" onClick={() => StakeNFT([0],true,false)}>Stake Croco</button>
           <button className="unstake" onClick={() => StakeNFT([0],false,false)}>Unstake Croco</button>
+          <button className="claim" onClick={Claim}>Claim</button>
           </>
           :
           <p className="notconnected">You are not connected</p>
