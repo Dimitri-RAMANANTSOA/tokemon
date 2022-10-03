@@ -61,9 +61,15 @@ function StakingNFT() {
   async function requestAccount() {
     if(typeof window.ethereum !== 'undefined') {
       let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
-      setAccounts(accounts);
+      let str = "";
+      str += accounts[0].substring(0, 6)
+      str += "..."
+      str += accounts[0].substring(accounts[0].length, accounts[0].length - 4)
+      console.log(str);
+      setAccounts(str);
     }
   }
+
   function getData() {
     setNFTselected([]);
     setContractNFTselected([]);
@@ -329,7 +335,7 @@ function StakingNFT() {
         {error && <p>{error}</p>}
         {!loader &&
         accounts.length > 0 ?
-        <p className="connected">{accounts[0].slice(1, 10)}</p>
+        <p className="connected">{accounts}</p>
         :
         <p className="notconnected">You are not connected</p>
         }
