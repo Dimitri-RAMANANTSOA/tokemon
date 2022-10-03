@@ -20,6 +20,10 @@ function StakingNFT() {
   const [StakedNFT, setStakedNFT] = useState([]);
   const [NFTuri, setNFTuri] = useState([]);
   const [balance, setBalance] = useState([]);
+  const [NFTselected, setNFTselected] = useState([]);
+  const [ContractNFTselected, setContractNFTselected] = useState([]);
+  const [Selected, setSelected] = useState([]);
+  const [ContractSelected, setContractSelected] = useState([]);
 
   useEffect(() => {
     requestAccount();
@@ -50,6 +54,10 @@ function StakingNFT() {
     }
   }
   function getData() {
+    setNFTselected([]);
+    setContractNFTselected([]);
+    setSelected([]);
+    setContractSelected([]);
     getNFTbalance();
     getStakingNFTbalance();
     showRewards();
@@ -182,7 +190,7 @@ function StakingNFT() {
    * @param {*} Stake boolean to indicate if we need Stake (true) or Unstake (false)
    * @param {*} All boolean to indicate if we want stake/unstake all NFTs(true) or just the user selection
    */
-  async function StakeNFT(NFTIds, Stake, All) {
+  async function StakeNFT(NFTIds,Stake, All) {
 
     if(typeof window.ethereum !== 'undefined') {
       let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
@@ -190,20 +198,24 @@ function StakingNFT() {
       const signer = provider.getSigner();
       const contractStaking = new ethers.Contract(TokemonStake, TokemonStaking.abi, signer);
       const contractNFT = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, provider);
+      console.log("NFTIds : ", NFTselected)
 
+      let list = NFTIds;
+            
       if (All) {
+        console.log("All NFTs");
         setError('');
         try {
           if(Stake) {
             await contractNFT.tokensOfOwner(accounts[0])
             .then((response) => {
-              NFTIds = response;
+              list = response;
             });
           }
           else {
             await contractStaking.tokenStakedByOwner(accounts[0])
             .then((response) => {
-              NFTIds = response;
+              list = response;
             });
           }
           
@@ -213,17 +225,31 @@ function StakingNFT() {
         }
 
       }
+      else {
+        console.log("selection")
+        let finallist = [];
+
+        list.forEach((value, index) => {
+          console.log ("index = " + index);
+          if (list[index] != 'null') {
+            console.log ("delete i = " + index)
+            finallist.push(value);
+          }
+        })
+
+        list = finallist;
+      }
 
       setError('');
       try {
         let transaction;
         if(Stake) {
-          console.log('Stake', String(NFTIds));
-          transaction = await contractStaking.Stake(NFTIds)
+          console.log('Stake', String(list));
+          transaction = await contractStaking.Stake(list)
         } 
         else {
-          console.log('Unstake', String(NFTIds));
-          transaction = await contractStaking.unstake(NFTIds)
+          console.log('Unstake', String(list));
+          transaction = await contractStaking.unstake(list)
         } 
         
         await transaction.wait();
@@ -233,47 +259,120 @@ function StakingNFT() {
       catch(err) {
         setError(err.message);
       }
+
+      console.log('valeur usestate', NFTselected)
+    }
+  }
+
+  function Load(e) {
+    let tab = Selected
+    let tab2 = ContractSelected
+    tab[e.target.getAttribute("id")] = false;
+    tab2[e.target.getAttribute("id")] = false;
+    console.log("Loading tab", tab)
+    setSelected(tab);
+    setContractSelected(tab2);
+  }
+
+  function Click(e, type) {
+    if (type == "user") {
+      let tab = Selected
+      let list = NFTselected
+      let i = e.target.getAttribute("id")
+
+      tab[i] = !tab[i];
+
+      if (tab[i]) {
+        list[i] = i;
+        e.target.setAttribute("class", "img-nft selected")
+      }
+      else {
+        list[i] = 'null';
+        e.target.setAttribute("class", "img-nft")
+      }
+      setNFTselected(list);
+      setSelected(tab);
+      console.log("user tab", tab)
+      console.log("user list", list)
+      return
+    }
+
+    if (type == "contract") {
+      let tab = ContractSelected
+      let list = ContractNFTselected
+      let i = e.target.getAttribute("id")
+      tab[i] = !tab[i];
+      
+
+      if (tab[i]) {
+        list[i] = i;
+      }
+      else {
+        list[i] = null;
+      }
+      setContractNFTselected(list);
+      setContractSelected(tab);
+      console.log("contract tab", tab)
+      console.log("contract list", list)
+      return
     }
   }
 
   return (
     <div className="App">
-        <div>
-          <p>rewards = {String(reward)}</p>
-          <p>wallet = {String(balance)}</p>
-          {error && <p>{error}</p>}
-          {!loader &&
-          accounts.length > 0 ?
-          <>
-          {/* <p className="connected">You are connected with account : {accounts[0]}</p>*/}
-          <button className="stake" onClick={() => StakeNFT([2],true,true)}>Stake All</button>
-          <button className="unstake" onClick={() => StakeNFT([2],false,true)}>Unstake All</button>
-
-          <button className="stake" onClick={() => StakeNFT([0],true,false)}>Stake Croco</button>
-          <button className="unstake" onClick={() => StakeNFT([0],false,false)}>Unstake Croco</button>
-          <button className="claim" onClick={Claim}>Claim</button>
-          </>
-          :
-          <p className="notconnected">You are not connected</p>
-          }
+      <>
+      <div className='header'>
+        <h1>Hello Tokemon</h1>
+        {error && <p>{error}</p>}
+        {!loader &&
+        accounts.length > 0 ?
+        <p className="connected">{accounts[0].slice(1, 10)}</p>
+        :
+        <p className="notconnected">You are not connected</p>
+        }
         </div>
-        <div className='User-NFT'>
-        <p>NFT du User</p>
+
+        <div className='info-container'>
+          <div className='info-card1'>
+            <p className='inside-info'>Balance = {String(balance)}</p>
+          </div>
+
+          <div className='info-card2'>
+            <p className='inside-info'>rewards = {String(reward)}</p>
+          </div>
+        </div>
+
+        <div className='card-container'>
+        <div className='user-NFT'>
         {
           NFTuri.map((img) => {
-           return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" />
+           return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" onLoad={(e) => {Load(e)}} onClick={(e) => {Click(e,"user")}} />
           })
         }
         </div>
-        <div className='Contract-NFT'>
-        <p>NFT du contrat</p>
+        <div className='contract-NFT'>
         {
           StakedNFT.map((img) => {
-           return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" />
+            return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" onLoad={(e) => {Load(e)}} onClick={(e) => {Click(e,"contract")}} />
           })
         }
         </div>
-    </div>
+        </div>
+
+        <div className='button-container'>
+          <div className='range-one'>
+          <button className="stake" onClick={() => StakeNFT(NFTselected,true,true)}>Stake All</button>
+          <button className="stake" onClick={() => StakeNFT(NFTselected,true,false)}>Stake Selection</button>
+          </div>
+
+          <div className='range-two'>
+            <button className="unstake" onClick={() => StakeNFT(ContractNFTselected,false,true)}>Unstake All</button>
+            <button className="stake" onClick={() => StakeNFT(ContractNFTselected,false,false)}>Unstake Selection</button>
+            <button className="claim" onClick={Claim}>Claim</button>
+          </div>
+        </div>
+      </>
+      </div>
   );
 }
 
