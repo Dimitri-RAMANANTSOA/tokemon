@@ -317,9 +317,11 @@ function StakingNFT() {
 
       if (tab[i]) {
         list[i] = i;
+        e.target.setAttribute("class", "img-nft selected")
       }
       else {
         list[i] = null;
+        e.target.setAttribute("class", "img-nft")
       }
       setContractNFTselected(list);
       setContractSelected(tab);
