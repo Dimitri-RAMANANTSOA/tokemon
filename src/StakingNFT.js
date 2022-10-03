@@ -30,6 +30,17 @@ function StakingNFT() {
     getData()
     setLoader(false);
   }, [])
+
+  useEffect(() => {
+    showRewards();
+    
+    const interval=setInterval(()=>{
+      showRewards()
+     },25000)
+       
+       
+     return()=>clearInterval(interval)
+  }, [])
   
   window.ethereum.addListener('connect', async(response) => {
     requestAccount();
@@ -58,6 +69,12 @@ function StakingNFT() {
     setContractNFTselected([]);
     setSelected([]);
     setContractSelected([]);
+    let imgbalise = document.getElementsByTagName('img');
+    
+    for(let i = 0;i < imgbalise.length; i++)
+    {
+      imgbalise[i].classList.remove('selected');
+    }
     getNFTbalance();
     getStakingNFTbalance();
     showRewards();
@@ -198,12 +215,10 @@ function StakingNFT() {
       const signer = provider.getSigner();
       const contractStaking = new ethers.Contract(TokemonStake, TokemonStaking.abi, signer);
       const contractNFT = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, provider);
-      console.log("NFTIds : ", NFTselected)
 
       let list = NFTIds;
             
       if (All) {
-        console.log("All NFTs");
         setError('');
         try {
           if(Stake) {
@@ -226,13 +241,10 @@ function StakingNFT() {
 
       }
       else {
-        console.log("selection")
         let finallist = [];
 
         list.forEach((value, index) => {
-          console.log ("index = " + index);
           if (list[index] != 'null') {
-            console.log ("delete i = " + index)
             finallist.push(value);
           }
         })
@@ -244,11 +256,9 @@ function StakingNFT() {
       try {
         let transaction;
         if(Stake) {
-          console.log('Stake', String(list));
           transaction = await contractStaking.Stake(list)
         } 
         else {
-          console.log('Unstake', String(list));
           transaction = await contractStaking.unstake(list)
         } 
         
@@ -259,8 +269,6 @@ function StakingNFT() {
       catch(err) {
         setError(err.message);
       }
-
-      console.log('valeur usestate', NFTselected)
     }
   }
 
@@ -269,7 +277,6 @@ function StakingNFT() {
     let tab2 = ContractSelected
     tab[e.target.getAttribute("id")] = false;
     tab2[e.target.getAttribute("id")] = false;
-    console.log("Loading tab", tab)
     setSelected(tab);
     setContractSelected(tab2);
   }
@@ -292,8 +299,6 @@ function StakingNFT() {
       }
       setNFTselected(list);
       setSelected(tab);
-      console.log("user tab", tab)
-      console.log("user list", list)
       return
     }
 
@@ -312,8 +317,6 @@ function StakingNFT() {
       }
       setContractNFTselected(list);
       setContractSelected(tab);
-      console.log("contract tab", tab)
-      console.log("contract list", list)
       return
     }
   }
