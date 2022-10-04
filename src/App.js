@@ -1,5 +1,5 @@
 import React from 'react';
-//import './App.css';
+import './App.css';
 import Mint from './MintNFT'
 import Staking from './StakingNFT'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"

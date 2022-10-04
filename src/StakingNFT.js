@@ -5,7 +5,7 @@ import TokemonERC721A from './artifacts/contracts/TokemonERC721A.sol/TokemonERC7
 import TokemonStaking from './artifacts/contracts/TokemonStaking.sol/TokemonStaking.json'
 import TokemonERC20 from './artifacts/contracts/TokemonIsERC20.sol/TokemonIsERC20.json'
 import icon from './img/icon-pokeball.png'
-import './App.css';
+import './StakingNFT.css';
 
 const TokemonNFT = "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e";
 const TokemonToken = "0xbCF26943C0197d2eE0E5D05c716Be60cc2761508";
@@ -379,7 +379,7 @@ function StakingNFT() {
   }
 
   return (
-    <div className="App">
+    <div className="Staking">
       <>
       <div className='header'>
         <h1>Hello Tokemon</h1>
