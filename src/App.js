@@ -9,7 +9,7 @@ function App() {
     <Router>
       <Routes>
           <Route path="/mint" element={<Mint />} />
-          <Route path="/staking" element={<Staking />} />  
+          <Route path="/" element={<Staking />} />  
       </Routes>     
     </Router>
   );
