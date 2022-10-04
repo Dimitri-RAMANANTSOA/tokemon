@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import TokemonERC721A from './artifacts/contracts/TokemonERC721A.sol/TokemonERC721A.json'
 import TokemonStaking from './artifacts/contracts/TokemonStaking.sol/TokemonStaking.json'
 import TokemonERC20 from './artifacts/contracts/TokemonIsERC20.sol/TokemonIsERC20.json'
+import icon from './img/icon-pokeball.png'
 import './App.css';
 
 const TokemonNFT = "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e";
@@ -385,7 +386,7 @@ function StakingNFT() {
         {error && <p>{error}</p>}
         {!loader &&
         accounts.length > 0 ?
-        <p className="connected">{accounts}</p>
+        <p className="connected"><img className='icon' src={icon}></img>{accounts}</p>
         :
         <p className="notconnected">You are not connected</p>
         }
@@ -397,7 +398,7 @@ function StakingNFT() {
           </div>
 
           <div className='info-card2'>
-            <p className='inside-info'>rewards = {String(reward)}</p>
+            <p className='inside-info'>Rewards = {String(reward)}</p>
           </div>
         </div>
 
