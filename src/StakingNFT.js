@@ -311,8 +311,7 @@ function StakingNFT() {
     if (type === "user") {
       let tab = Selected
       let list = NFTselected
-      let i = e.target.getAttribute("key")
-
+      let i = e.target.getAttribute("id")
       tab[i] = !tab[i];
 
       if (tab[i]) {
@@ -340,7 +339,7 @@ function StakingNFT() {
     if (type === "contract") {
       let tab = ContractSelected
       let list = ContractNFTselected
-      let i = e.target.getAttribute("key")
+      let i = e.target.getAttribute("id")
       tab[i] = !tab[i];
       
 
@@ -402,7 +401,7 @@ function StakingNFT() {
         <div className='contract-NFT'>
         {
           StakedNFT.map((img) => {
-            return <img className="img-nft" src={baseIMG + img + ".png"} key={img} alt="nft" onLoad={(e) => {Load(e)}} onClick={(e) => {Click(e,"contract")}} />
+            return <img className="img-nft" src={baseIMG + img + ".png"} id={img} key={img} alt="nft" onLoad={(e) => {Load(e)}} onClick={(e) => {Click(e,"contract")}} />
           })
         }
         </div>
