@@ -76,7 +76,6 @@ function StakingNFT() {
   async function requestAccount() {
     if(typeof window.ethereum !== 'undefined') {
       let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
-      //0xaa36a7 <- Sepolia SepoliachainId
       let str = "";
       str += accounts[0].substring(0, 6)
       str += "..."

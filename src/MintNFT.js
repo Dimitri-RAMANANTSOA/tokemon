@@ -8,40 +8,59 @@ import img2 from './img/3.png';
 import img3 from './img/6.png';
 
 const TokemonNFT = "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e";
+const SepoliachainId = "0xaa36a7";
 
 function MintNFT() {
 
   const [accounts, setAccounts] = useState([]);
+  const [displayaccounts, setdisplayaccounts] = useState([]);
   const [error, setError] = useState('');
   const [data, setData] = useState({});
   const [loader, setLoader] = useState(true);
 
   useEffect(() => {
+    window.ethereum.addListener('connect', async(response) => {
+      requestAccount();
+    })
+  
+    window.ethereum.on('accountsChanged', () => {
+      window.location.reload();
+    })
+  
+    window.ethereum.on('chainChanged', () => {
+      window.location.reload();
+    })
+  
+    window.ethereum.on('disconnect', () => {
+      window.location.reload();
+    })
+
     requestAccount();
-    fetchData();
-    setLoader(false);
+    checkChain()
   }, [])
 
-  window.ethereum.addListener('connect', async(response) => {
-    requestAccount();
-  })
-
-  window.ethereum.on('accountsChanged', () => {
-    window.location.reload();
-  })
-
-  window.ethereum.on('chainChanged', () => {
-    window.location.reload();
-  })
-
-  window.ethereum.on('disconnect', () => {
-    window.location.reload();
-  })
+  async function checkChain() {
+    await window.ethereum.request({ method: 'eth_chainId' })
+    .then((response) => {
+      if(response == SepoliachainId) {
+        fetchData();
+        setLoader(false);
+      }
+      else {
+        setError("Wrong Network, please select Sepolia test network");
+      }
+    })
+  }
 
   async function requestAccount() {
     if(typeof window.ethereum !== 'undefined') {
       let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
+      let str = "";
+      str += accounts[0].substring(0, 6)
+      str += "..."
+      str += accounts[0].substring(accounts[0].length, accounts[0].length - 4)
       setAccounts(accounts);
+      setdisplayaccounts(str);
     }
   }
 
@@ -110,21 +129,21 @@ function MintNFT() {
         </div>
         {error && <p>{error}</p>}
         <h1>Mint a Tokemon NFT</h1>
-        <p className="count">{data.totalSupply} / 100</p>
-        <p className="cost">Each Tokemon costs {data.cost / 10**18} ETH (without gas fees)</p>
 
         {!loader &&
         accounts.length > 0 ?
         <>
-        <p className="connected">You are connected with account : {accounts[0]}</p>
+        <p className="count">{data.totalSupply} / 100</p>
+        <p className="cost">Each Tokemon costs {data.cost / 10**18} ETH (without gas fees)</p>
+        <p className="connected">You are connected with account : {displayaccounts}</p>
         <button className="mint" onClick={mint}>Buy a Tokemon</button>
+          { accounts[0] === data.owner && 
+              <button className="withdraw" onClick={withdraw}>Withdraw</button>
+          }
         </>
         :
         <p className="notconnected">You are not connected</p>
         }
-          { accounts[0] === data.owner && 
-            <button className="withdraw" onClick={withdraw}>Withdraw</button>
-          }
       </div>
     </div>
   );
