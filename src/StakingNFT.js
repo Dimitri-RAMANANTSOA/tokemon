@@ -10,6 +10,7 @@ const TokemonNFT = "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e";
 const TokemonToken = "0xbCF26943C0197d2eE0E5D05c716Be60cc2761508";
 const TokemonStake = "0x59F2f1fCfE2474fD5F0b9BA1E73ca90b143Eb8d0";
 const baseIMG = "https://ipfs.io/ipfs/bafybeick36ixdiuh7sk62zii6kmefifqiestadng2gruxo2tnoefdkvmb4/"
+const SepoliachainId = "0xaa36a7";
 
 function StakingNFT() {
 
@@ -30,41 +31,51 @@ function StakingNFT() {
   const [ContractStake, setContractStake] = useState(true);
 
   useEffect(() => {
-    requestAccount();
-    getData()
-    setLoader(false);
-  }, [])
-
-  useEffect(() => {
-    showRewards();
-    
-    const interval=setInterval(()=>{
-      showRewards()
-     },25000)
-       
-       
-     return()=>clearInterval(interval)
-  }, [])
+    window.ethereum.addListener('connect', async(response) => {
+      requestAccount();
+    })
   
-  window.ethereum.addListener('connect', async(response) => {
+    window.ethereum.on('accountsChanged', () => {
+      window.location.reload();
+    })
+  
+    window.ethereum.on('chainChanged', () => {
+      window.location.reload();
+    })
+  
+    window.ethereum.on('disconnect', () => {
+      window.location.reload();
+    })
+
     requestAccount();
-  })
+    checkChain()
+  }, [])
 
-  window.ethereum.on('accountsChanged', () => {
-    window.location.reload();
-  })
+  async function checkChain() {
+    await window.ethereum.request({ method: 'eth_chainId' })
+    .then((response) => {
+      if(response == SepoliachainId) {
+        getData()
+        setLoader(false);
 
-  window.ethereum.on('chainChanged', () => {
-    window.location.reload();
-  })
-
-  window.ethereum.on('disconnect', () => {
-    window.location.reload();
-  })
+        const interval=setInterval(()=>{
+          showRewards()
+        },25000)
+          
+        return()=>clearInterval(interval)
+      }
+      else {
+        setError("Wrong Network, please select Sepolia test network");
+        setReward(0);
+        setBalance(0);
+      }
+    })
+  }
 
   async function requestAccount() {
     if(typeof window.ethereum !== 'undefined') {
       let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
+      //0xaa36a7 <- Sepolia SepoliachainId
       let str = "";
       str += accounts[0].substring(0, 6)
       str += "..."
