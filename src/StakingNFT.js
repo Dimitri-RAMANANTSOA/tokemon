@@ -24,6 +24,10 @@ function StakingNFT() {
   const [ContractNFTselected, setContractNFTselected] = useState([]);
   const [Selected, setSelected] = useState([]);
   const [ContractSelected, setContractSelected] = useState([]);
+  const [UserStakeAll, setUserStakeAll] = useState(true);
+  const [UserStake, setUserStake] = useState(true);
+  const [ContractStakeAll, setContractStakeAll] = useState(true);
+  const [ContractStake, setContractStake] = useState(true);
 
   useEffect(() => {
     requestAccount();
@@ -65,7 +69,6 @@ function StakingNFT() {
       str += accounts[0].substring(0, 6)
       str += "..."
       str += accounts[0].substring(accounts[0].length, accounts[0].length - 4)
-      console.log(str);
       setAccounts(str);
     }
   }
@@ -97,7 +100,13 @@ function StakingNFT() {
       let tab = [];
       try {
         const NFTlist = await contract.tokensOfOwner(accounts[0]);
-        NFTlist.map((elem) => {
+        if (NFTlist.length > 0) {
+          setUserStakeAll(false);
+        }
+        else {
+          setUserStakeAll(true);
+        }
+        NFTlist.forEach((elem) => {
           tab.push(elem);
         })
         setNFTuri(tab);
@@ -119,7 +128,13 @@ function StakingNFT() {
       let tab = [];
       try {
         const NFTlist = await contract.tokenStakedByOwner(accounts[0]);
-        NFTlist.map((elem) => {
+        if (NFTlist.length > 0) {
+          setContractStakeAll(false);
+        }
+        else {
+          setContractStakeAll(true);
+        }
+        NFTlist.forEach((elem) => {
           tab.push(elem);
         })
         setStakedNFT(tab);
@@ -142,10 +157,15 @@ function StakingNFT() {
       try {
         await contract.tokenStakedByOwner(accounts[0])
         .then((response) => {
-          contract.getRewarsAmmount(accounts[0],response)
-          .then((rep) => {
-            setReward(rep);
-          })
+          if (response.length > 0) {
+            contract.getRewarsAmmount(accounts[0],response)
+            .then((rep) => {
+              setReward(rep);
+            })
+          }
+          else {
+            setReward(0);
+          }
         });
       }
       catch(err) {
@@ -250,7 +270,7 @@ function StakingNFT() {
         let finallist = [];
 
         list.forEach((value, index) => {
-          if (list[index] != 'null') {
+          if (list[index] !== 'null') {
             finallist.push(value);
           }
         })
@@ -288,10 +308,10 @@ function StakingNFT() {
   }
 
   function Click(e, type) {
-    if (type == "user") {
+    if (type === "user") {
       let tab = Selected
       let list = NFTselected
-      let i = e.target.getAttribute("id")
+      let i = e.target.getAttribute("key")
 
       tab[i] = !tab[i];
 
@@ -303,15 +323,24 @@ function StakingNFT() {
         list[i] = 'null';
         e.target.setAttribute("class", "img-nft")
       }
+
+      let tmp = true;
+      tab.forEach(elem => {
+        if (elem === true) {
+          tmp = false;
+        }
+      });
+
+      setUserStake(tmp);
       setNFTselected(list);
       setSelected(tab);
       return
     }
 
-    if (type == "contract") {
+    if (type === "contract") {
       let tab = ContractSelected
       let list = ContractNFTselected
-      let i = e.target.getAttribute("id")
+      let i = e.target.getAttribute("key")
       tab[i] = !tab[i];
       
 
@@ -320,9 +349,18 @@ function StakingNFT() {
         e.target.setAttribute("class", "img-nft selected")
       }
       else {
-        list[i] = null;
+        list[i] = 'null';
         e.target.setAttribute("class", "img-nft")
       }
+      
+      let tmp = true;
+      tab.forEach(elem => {
+        if (elem === true) {
+          tmp = false;
+        }
+      });
+
+      setContractStake(tmp);
       setContractNFTselected(list);
       setContractSelected(tab);
       return
@@ -357,14 +395,14 @@ function StakingNFT() {
         <div className='user-NFT'>
         {
           NFTuri.map((img) => {
-           return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" onLoad={(e) => {Load(e)}} onClick={(e) => {Click(e,"user")}} />
+           return <img className="img-nft" src={baseIMG + img + ".png"} id={img} key={img} alt="nft" onLoad={(e) => {Load(e)}} onClick={(e) => {Click(e,"user")}} />
           })
         }
         </div>
         <div className='contract-NFT'>
         {
           StakedNFT.map((img) => {
-            return <img className="img-nft" src={baseIMG + img + ".png"} id={img} alt="nft" onLoad={(e) => {Load(e)}} onClick={(e) => {Click(e,"contract")}} />
+            return <img className="img-nft" src={baseIMG + img + ".png"} key={img} alt="nft" onLoad={(e) => {Load(e)}} onClick={(e) => {Click(e,"contract")}} />
           })
         }
         </div>
@@ -372,13 +410,13 @@ function StakingNFT() {
 
         <div className='button-container'>
           <div className='range-one'>
-          <button className="stake" onClick={() => StakeNFT(NFTselected,true,true)}>Stake All</button>
-          <button className="stake" onClick={() => StakeNFT(NFTselected,true,false)}>Stake Selection</button>
+          <button className="stake" disabled={UserStakeAll} onClick={() => StakeNFT(NFTselected,true,true)}>Stake All</button>
+          <button className="stake" disabled={UserStake} onClick={() => StakeNFT(NFTselected,true,false)}>Stake Selection</button>
           </div>
 
           <div className='range-two'>
-            <button className="unstake" onClick={() => StakeNFT(ContractNFTselected,false,true)}>Unstake All</button>
-            <button className="stake" onClick={() => StakeNFT(ContractNFTselected,false,false)}>Unstake Selection</button>
+            <button className="unstake" disabled={ContractStakeAll} onClick={() => StakeNFT(ContractNFTselected,false,true)}>Unstake All</button>
+            <button className="stake" disabled={ContractStake} onClick={() => StakeNFT(ContractNFTselected,false,false)}>Unstake Selection</button>
             <button className="claim" onClick={Claim}>Claim</button>
           </div>
         </div>
