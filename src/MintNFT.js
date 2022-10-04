@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import TokemonERC721A from './artifacts/contracts/TokemonERC721A.sol/TokemonERC721A.json'
-import './App.css';
+import './MintNFT.css';
 import img1 from './img/1.png';
 import img2 from './img/3.png';
 import img3 from './img/6.png';
