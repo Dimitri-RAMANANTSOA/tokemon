@@ -7,9 +7,9 @@ import TokemonERC20 from './artifacts/contracts/TokemonIsERC20.sol/TokemonIsERC2
 import icon from './img/icon-pokeball.png'
 import './StakingNFT.css';
 
-const TokemonNFT = "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e";
+const TokemonNFT = "0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503";
 const TokemonToken = "0xbCF26943C0197d2eE0E5D05c716Be60cc2761508";
-const TokemonStake = "0x59F2f1fCfE2474fD5F0b9BA1E73ca90b143Eb8d0";
+const TokemonStake = "0x7798A400cBe0Ca14a7D614ECa1CD15adE5055413";
 const baseIMG = "https://ipfs.io/ipfs/bafybeick36ixdiuh7sk62zii6kmefifqiestadng2gruxo2tnoefdkvmb4/"
 const SepoliachainId = "0xaa36a7";
 
@@ -17,11 +17,11 @@ function StakingNFT() {
 
   const [accounts, setAccounts] = useState([]);
   const [error, setError] = useState('');
-  const [reward, setReward] = useState({});
+  const [reward, setReward] = useState(0);
   const [loader, setLoader] = useState(true);
   const [StakedNFT, setStakedNFT] = useState([]);
   const [NFTuri, setNFTuri] = useState([]);
-  const [balance, setBalance] = useState([]);
+  const [balance, setBalance] = useState(0);
   const [NFTselected, setNFTselected] = useState([]);
   const [ContractNFTselected, setContractNFTselected] = useState([]);
   const [Selected, setSelected] = useState([]);

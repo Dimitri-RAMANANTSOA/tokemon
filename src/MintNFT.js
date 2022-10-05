@@ -8,7 +8,7 @@ import img2 from './img/3.png';
 import img3 from './img/6.png';
 import icon from './img/icon-pokeball.png'
 
-const TokemonNFT = "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e";
+const TokemonNFT = "0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503";
 const SepoliachainId = "0xaa36a7";
 
 function MintNFT() {
@@ -67,6 +67,7 @@ function MintNFT() {
 
   async function fetchData() {
     if(typeof window.ethereum !== 'undefined') {
+      let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, provider);
 
@@ -74,7 +75,8 @@ function MintNFT() {
         const cost = await contract.cost();
         const totalSupply = await contract.totalSupply();
         const owner = await contract.owner();
-        const object = {"cost": String(cost), "totalSupply": String(totalSupply), "owner": owner.toLowerCase()};
+        const balance = await provider.getBalance(accounts[0]);
+        const object = {"cost": String(cost), "totalSupply": String(totalSupply), "owner": owner.toLowerCase(),"balance": String(balance)};
         setData(object);
       }
       catch(err) {
@@ -84,17 +86,21 @@ function MintNFT() {
     }
   }
 
-  async function mint() {
+  async function mint(balance, cost) {
     if(typeof window.ethereum !== 'undefined') {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, signer);
-      console.log(signer);
       setError('');
       try {
-        const transaction  = await contract.mint(1);
-        await transaction.wait();
-        fetchData();
+        if (balance >= cost){
+          const transaction  = await contract.mint(1, { value: cost });
+          await transaction.wait();
+          fetchData();
+        } else {
+          setError('Insufficient funds');
+        }
+        
       }
       catch(err) {
         setError(err.message);
@@ -147,7 +153,7 @@ function MintNFT() {
         }
       </div>
       <div className='mint-btn'>
-      <button className="mint" onClick={mint}>Mint</button>
+      <button className="mint" onClick={() => mint(data.balance,data.cost)}>Mint</button>
           { accounts[0] === data.owner && 
               <button className="withdraw" onClick={withdraw}>Withdraw</button>
           }

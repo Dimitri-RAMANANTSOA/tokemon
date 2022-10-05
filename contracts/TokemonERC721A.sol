@@ -48,16 +48,14 @@ contract TokemonERC721A is ERC721A, ERC721AQueryable, Ownable {
     if (msg.sender != owner()) {
         if(onlyWhitelisted == true) {
             require(isWhitelisted(msg.sender), "user is not whitelisted");
-            uint256 ownerMintedCount = addressMintedBalance[msg.sender];
-            require(ownerMintedCount + _mintAmount <= nftPerAddressLimit, "max NFT per address exceeded");
         }
+        uint256 ownerMintedCount = addressMintedBalance[msg.sender];
+        require(ownerMintedCount + _mintAmount <= nftPerAddressLimit, "max NFT per address exceeded");
         require(msg.value >= cost * _mintAmount, "insufficient funds");
     }
 
-    for (uint256 i = 1; i <= _mintAmount; i++) {
-      addressMintedBalance[msg.sender]++;
-      _safeMint(msg.sender, supply + i);
-    }
+      addressMintedBalance[msg.sender]+= _mintAmount;
+      _safeMint(msg.sender, _mintAmount);
   }
   
   function isWhitelisted(address _user) public view returns (bool) {

@@ -10,7 +10,7 @@ async function main() {
   const STAKING = await hre.ethers.getContractFactory("TokemonStaking");
   const staking = await STAKING.deploy(
   "0xbCF26943C0197d2eE0E5D05c716Be60cc2761508",
-  "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e"
+  "0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503"
   );
 
   await staking.deployed();
