@@ -120,12 +120,13 @@ function MintNFT() {
   }
 
   return (
-    <div className="App">
+    <div className="bg">
+      <p className="connected">You are connected with account : {accounts[0]}</p>
       <div className="container">
         <div className="banner">
-          <img src={img1} alt="img" />
-          <img src={img2} alt="img" />
-          <img src={img3} alt="img" />
+          <img className='img-nft' src={img1} alt="img" />
+          <img className='img-nft' src={img2} alt="img" />
+          <img className='img-nft' src={img3} alt="img" />
         </div>
         {error && <p>{error}</p>}
         <h1>Mint a Tokemon NFT</h1>

@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+ul > a > li {
+  display: inline;
+}
+
+li {
+  padding: 10px;
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+ul {
+  margin-right: 30px;
+}
+
+h1 {
+  margin-left: 30px;
+}
