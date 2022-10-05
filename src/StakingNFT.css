@@ -76,6 +76,7 @@ button {
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  margin-bottom: -30px;
 }
 
 .info-container {
