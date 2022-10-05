@@ -102,6 +102,7 @@ function MintNFT() {
 
   return (
     <div className="bg">
+      <p className="connected">You are connected with account : {accounts[0]}</p>
       <div className="container">
         <div className="banner">
           <img className='img-nft' src={img1} alt="img" />
@@ -116,7 +117,6 @@ function MintNFT() {
         {!loader &&
         accounts.length > 0 ?
         <>
-        <p className="connected">You are connected with account : {accounts[0]}</p>
         <button className="mint" onClick={mint}>Buy a Tokemon</button>
         </>
         :
