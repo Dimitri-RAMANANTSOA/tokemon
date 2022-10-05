@@ -252,8 +252,28 @@ function StakingNFT() {
       const signer = provider.getSigner();
       const contractStaking = new ethers.Contract(TokemonStake, TokemonStaking.abi, signer);
       const contractNFT = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, provider);
+      const contractNFTSigner = new ethers.Contract(TokemonNFT, TokemonERC721A.abi, signer);
 
       let list = NFTIds;
+      let approved = false;
+      let transaction;
+
+      await contractNFT.isApprovedForAll(accounts[0],TokemonStake)
+      .then((response) => {
+        if (response) {
+          approved = true;
+        }
+      });
+
+      if(!approved) {
+        try {
+          transaction = await contractNFTSigner.setApprovalForAll(TokemonStake, true);
+          await transaction.wait();
+        }
+        catch(err) {
+          setError(err.message);
+        }
+      }
             
       if (All) {
         setError('');
@@ -291,7 +311,6 @@ function StakingNFT() {
 
       setError('');
       try {
-        let transaction;
         if(Stake) {
           transaction = await contractStaking.Stake(list)
         } 
