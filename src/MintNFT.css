@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 80vh;
+  height: 60vh;
 
 }
 
@@ -19,5 +19,29 @@ h1 {
 }
 
 .cost {
-  font-weight: 300;
+  font-weight: bold;
+}
+
+.img-mint {
+  height: 300px;
+  width: 300px;
+  margin: 5px;
+}
+
+.mint-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.mint {
+  margin-right: 10px;
+}
+
+.mint-info {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3px);
+  padding: 15px;
+  border-radius: 10px;
+
 }

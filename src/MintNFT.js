@@ -6,6 +6,7 @@ import './MintNFT.css';
 import img1 from './img/1.png';
 import img2 from './img/3.png';
 import img3 from './img/6.png';
+import icon from './img/icon-pokeball.png'
 
 const TokemonNFT = "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e";
 const SepoliachainId = "0xaa36a7";
@@ -121,31 +122,36 @@ function MintNFT() {
 
   return (
     <div className="bg">
-      <p className="connected">You are connected with account : {accounts[0]}</p>
-      <div className="container">
-        <div className="banner">
-          <img className='img-nft' src={img1} alt="img" />
-          <img className='img-nft' src={img2} alt="img" />
-          <img className='img-nft' src={img3} alt="img" />
-        </div>
+      <div className='top'>
+        <p className="connected"><img className='icon' src={icon}></img>{displayaccounts}</p>
         {error && <p>{error}</p>}
-        <h1>Mint a Tokemon NFT</h1>
+        </div>
+      <div className="container">
+      <h1>Mint a Tokemon NFT</h1>
+        <div className="banner">
+          <img className='img-mint' src={img1} alt="img" />
+          <img className='img-mint' src={img2} alt="img" />
+          <img className='img-mint' src={img3} alt="img" />
+        </div>
 
         {!loader &&
         accounts.length > 0 ?
         <>
+        <div className='mint-info'>
         <p className="count">{data.totalSupply} / 100</p>
         <p className="cost">Each Tokemon costs {data.cost / 10**18} ETH (without gas fees)</p>
-        <p className="connected">You are connected with account : {displayaccounts}</p>
-        <button className="mint" onClick={mint}>Buy a Tokemon</button>
-          { accounts[0] === data.owner && 
-              <button className="withdraw" onClick={withdraw}>Withdraw</button>
-          }
+        </div>
         </>
         :
         <p className="notconnected">You are not connected</p>
         }
       </div>
+      <div className='mint-btn'>
+      <button className="mint" onClick={mint}>Buy a Tokemon</button>
+          { accounts[0] === data.owner && 
+              <button className="withdraw" onClick={withdraw}>Withdraw</button>
+          }
+          </div>
     </div>
   );
 }
