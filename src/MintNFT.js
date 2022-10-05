@@ -43,7 +43,7 @@ function MintNFT() {
   async function checkChain() {
     await window.ethereum.request({ method: 'eth_chainId' })
     .then((response) => {
-      if(response == SepoliachainId) {
+      if(response === SepoliachainId) {
         fetchData();
         setLoader(false);
       }
@@ -129,10 +129,15 @@ function MintNFT() {
   return (
     <div className="bg">
       <div className='top'>
-        <p className="connected"><img className='icon' src={icon}></img>{displayaccounts}</p>
-        {error && <p>{error}</p>}
+        {!loader &&
+        accounts.length > 0 ?
+        <p className="connected"><img className='icon' alt="pokeball-icon" src={icon}></img>{displayaccounts}</p>
+        :
+        <p className="notconnected">You are not connected</p>
+        }
         </div>
       <div className="container">
+      {error && <p className='error'>{error}</p>}
       <h1>Mint a Tokemon NFT</h1>
         <div className="banner">
           <img className='img-mint' src={img1} alt="img" />
@@ -147,17 +152,18 @@ function MintNFT() {
         <p className="count">{data.totalSupply} / 100</p>
         <p className="cost">Each Tokemon costs {data.cost / 10**18} ETH (without gas fees)</p>
         </div>
-        </>
-        :
-        <p className="notconnected">You are not connected</p>
-        }
-      </div>
-      <div className='mint-btn'>
-      <button className="mint" onClick={() => mint(data.balance,data.cost)}>Mint</button>
+        <div className='mint-btn'>
+        <button className="mint" onClick={() => mint(data.balance,data.cost)}>Mint</button>
           { accounts[0] === data.owner && 
               <button className="withdraw" onClick={withdraw}>Withdraw</button>
           }
-          </div>
+        </div>
+        </>
+        :
+        ''
+        }
+      </div>
+      
     </div>
   );
 }

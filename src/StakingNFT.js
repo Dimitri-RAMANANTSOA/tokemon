@@ -55,7 +55,7 @@ function StakingNFT() {
   async function checkChain() {
     await window.ethereum.request({ method: 'eth_chainId' })
     .then((response) => {
-      if(response == SepoliachainId) {
+      if(response === SepoliachainId) {
         getData()
         setLoader(false);
 
@@ -381,15 +381,17 @@ function StakingNFT() {
     <div className="bg">
       <>
       <div className='top'>
-        {error && <p>{error}</p>}
         {!loader &&
         accounts.length > 0 ?
-        <p className="connected"><img className='icon' src={icon}></img>{accounts}</p>
+        <p className="connected"><img className='icon' alt="pokeball-icon" src={icon}></img>{accounts}</p>
         :
         <p className="notconnected">You are not connected</p>
         }
-        </div>        
-
+        </div> 
+        <div className="container-error">
+        {error && <p className='error'>{error}</p>}
+        </div>       
+        
         <div className='info-container'>
           <div className='info-card1'>
             <p className='inside-info'>Balance = {String(balance)}</p>

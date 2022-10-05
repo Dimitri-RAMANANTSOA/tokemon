@@ -132,9 +132,15 @@ button {
 .top {
   display: flex;
   justify-content: flex-end;
+  margin-top: -15px;
 }
 
 .connected, .notconnected {
   margin-right: 100px;
   margin-top: 20px;
+}
+
+.container-error {
+  display: flex;
+  justify-content: center;
 }
