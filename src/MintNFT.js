@@ -101,7 +101,7 @@ function MintNFT() {
   }
 
   return (
-    <div className="App">
+    <div className="bg">
       <div className="container">
         <div className="banner">
           <img className='img-nft' src={img1} alt="img" />

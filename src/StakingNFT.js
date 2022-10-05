@@ -379,10 +379,9 @@ function StakingNFT() {
   }
 
   return (
-    <div className="Staking">
+    <div className="bg">
       <>
-      <div className='header'>
-        <h1>Hello Tokemon</h1>
+      <div className='top'>
         {error && <p>{error}</p>}
         {!loader &&
         accounts.length > 0 ?
@@ -390,7 +389,7 @@ function StakingNFT() {
         :
         <p className="notconnected">You are not connected</p>
         }
-        </div>
+        </div>        
 
         <div className='info-container'>
           <div className='info-card1'>
