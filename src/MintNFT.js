@@ -138,7 +138,7 @@ function MintNFT() {
         </div>
       <div className="container">
       {error && <p className='error'>{error}</p>}
-      <h1>Mint a Tokemon NFT</h1>
+      <h2>Mint a Tokemon NFT</h2>
         <div className="banner">
           <img className='img-mint' src={img1} alt="img" />
           <img className='img-mint' src={img2} alt="img" />
