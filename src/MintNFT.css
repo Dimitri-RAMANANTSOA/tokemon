@@ -16,10 +16,12 @@ h1 {
 .count {
   font-size: 2rem;
   font-weight: 700;
+  text-align: center;
 }
 
 .cost {
   font-weight: bold;
+  text-align: center;
 }
 
 .img-mint {
@@ -39,7 +41,7 @@ h1 {
 }
 
 .mint-info {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(3px);
   padding: 15px;
   border-radius: 10px;

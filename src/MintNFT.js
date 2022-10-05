@@ -147,7 +147,7 @@ function MintNFT() {
         }
       </div>
       <div className='mint-btn'>
-      <button className="mint" onClick={mint}>Buy a Tokemon</button>
+      <button className="mint" onClick={mint}>Mint</button>
           { accounts[0] === data.owner && 
               <button className="withdraw" onClick={withdraw}>Withdraw</button>
           }
